@@ -45,7 +45,7 @@ The above request may return the full chat data in JSON.
 Additional parameters:
 *   channel  
 	String  
-	To specify a channel. Make sure that the '#' sign is convert into '%23'.  
+	To specify a channel. Make sure that the '#' sign is converted into '%23'.  
 *   username  
 	String  
 	To specify an user.  
@@ -68,7 +68,7 @@ The above request may return the full user action data in JSON.
 Additional parameters:
 *   channel  
 	String  
-	To specify a channel. Make sure that the '#' sign is convert into '%23'.  
+	To specify a channel. Make sure that the '#' sign is converted into '%23'.  
 *   username  
 	String  
 	To specify an user.  
@@ -92,7 +92,7 @@ The above request may return the full online users data in specified channel in 
 Additional parameters:  
 *   channel  
 	String  
-	To specify a channel. Make sure that the '#' sign is convert into '%23'.  
+	To specify a channel. Make sure that the '#' sign is converted into '%23'.  
 *   start  
 	UNIX Timestamp  
 	To specify the earliest time, will drop all message before this time. You must also specify the 'end' parameter.  
