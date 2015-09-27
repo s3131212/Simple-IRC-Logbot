@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  	<head>
+    	<title><%= channel %> - <%= botname %></title>
+    	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="/static/js/chart.min.js"></script>
+        <script src="/static/js/flotr2.min.js"></script>
+        <script src="/static/js/moment.min.js"></script>
+        <link href="/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+        <script>
+        $(function() {
+            function escapeHtml(text) {
+                var map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                if(text == null) return '';
+                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+            function fetchdata(date){
+                $('.box').show();
+                $('.active').removeClass('active');
+                $('[data-action=info]').parent().addClass('active');
+
+                //init date
+                date = date || Date.now();
+                var start = new Date(date);
+                start.setHours(0,0,0,0);
+                var end = new Date(date);
+                end.setHours(23,59,59,999);
+
+                //empty data
+                $('#message').empty();
+                $('#action').empty();
+                $('#online_list').empty();
+                //$('#online_user').remove();
+                //$('#onlineusers_container').append('<canvas id="online_user" width="800" height="400"></canvas>');
+                $('#current_user').remove();
+                $('#chart_container').prepend('<canvas id="current_user" width="400" height="400"></canvas>');
+
+
+                $.ajax({
+                    url: '/api/message/?channel='+encodeURIComponent('<%= channel %>')+'&start='+ Math.floor(start.getTime()/1000) +'&end='+ Math.floor(end.getTime()/1000),
+                    cache: false,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.length == 0) return false;
+                        $.each(data, function( key, value ) {
+                            var a = new Date((value.time + 60*60*8) * 1000);
+                            $('#message').append('<tr><td style="width: 250px!important ;">'+ a.toISOString().slice(0, 19).replace('T', ' ') +'</td><td>'+escapeHtml(value.sender)+'</td><td style="max-width: 60%!important; word-break: break-all;">'+escapeHtml(value.text)+'</td></tr>');
+                        });
+                    }
+                });
+
+                $.ajax({
+                    url: '/api/action/?channel='+encodeURIComponent('<%= channel %>')+'&start='+ Math.floor(start.getTime()/1000) +'&end='+ Math.floor(end.getTime()/1000),
+                    cache: false,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.length == 0) return false;
+                        $.each(data, function( key, value ) {
+                            var a = new Date((value.time + 60*60*8) * 1000);
+                            var message = JSON.parse(value.message);
+                            $('#action').append('<tr><td style="width: 250px">'+ a.toISOString().slice(0, 19).replace('T', ' ') +'</td><td style="width: 250px">'+escapeHtml(value.username)+'</td><td>' + escapeHtml(message.host) + '</td><td>'+escapeHtml(value.action)+'</td><td>'+escapeHtml(value.reason)+'</td></tr>');
+                        });
+                    }
+                });
+
+                $.ajax({
+                    url: '/api/names/?channel='+encodeURIComponent('<%= channel %>')+'&start='+ Math.floor(start.getTime()/1000) +'&end='+Math.floor(end.getTime()/1000),
+                    cache: false,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.length == 0){
+                            $('#online_user').empty() 
+                            return false;
+                        }
+                        var current = JSON.parse(data[Object.keys(data).pop()].data);
+                        var normal_user = 0; var voice = 0; var op = 0; 
+                        $.each(current, function( key, value ) {
+                            if(value == '@'){
+                                $('#online_list').append('<li style="color:#FF5A5E">'+key+'</li>');
+                                op++;
+                            }else if(value == '+'){
+                                $('#online_list').append('<li style="color:#46BFBD">'+key+'</li>');
+                                voice++;
+                            }else{
+                                $('#online_list').append('<li style="color:#444444">'+key+'</li>');
+                                normal_user++;
+                            }
+                        });
+
+                        
+                        var current_online_data = [
+                            {
+                                value: op,
+                                color:"#F7464A",
+                                highlight: "#FF5A5E",
+                                label: "OP"
+                            },
+                            {
+                                value: voice,
+                                color: "#46BFBD",
+                                highlight: "#5AD3D1",
+                                label: "Half OP"
+                            },
+                            {
+                                value: normal_user,
+                                color: "#444444",
+                                highlight: "#666666",
+                                label: "Normal Users"
+                            }
+                        ];
+                        var ctx = $("#current_user").get(0).getContext("2d");
+                        var current_online = new Chart(ctx).Doughnut(current_online_data,null);
+
+                        (function basic_time(container) {
+                            var
+                                d1    = [],
+                                start = new Date("2009/01/01 01:00").getTime(),
+                                options,
+                                graph,
+                                i, x, o;
+
+                            $.each(data, function( key, value ) {
+                                x = new Date((value.time + 60*60*8) * 1000);
+                                var json_data = $.parseJSON(value.data);
+                                d1.push([x, Object.keys(json_data).length]);
+                            });
+                            options = {
+                                xaxis : {
+                                    mode : 'time', 
+                                    labelsAngle : 45
+                                },
+                                yaxis : {
+                                    min: 0
+                                },
+                                selection : {
+                                    mode : 'x'
+                                },
+                                HtmlText : false,
+                                parseFloat: false
+                            };
+                            function drawGraph (opts) {
+                                o = Flotr._.extend(Flotr._.clone(options), opts || {});
+                                return Flotr.draw(
+                                    container,
+                                    [ d1 ],
+                                    o
+                                );
+                            }
+
+                            graph = drawGraph();      
+                                
+                            Flotr.EventAdapter.observe(container, 'flotr:select', function(area){
+                                // Draw selected area
+                                graph = drawGraph({
+                                    xaxis : { min : area.x1, max : area.x2, mode : 'time', labelsAngle : 45 },
+                                    yaxis : { min : area.y1, max : area.y2 }
+                                });
+                            });
+                                
+                            // When graph is clicked, draw the graph with default area.
+                            Flotr.EventAdapter.observe(container, 'flotr:click', function () { graph = drawGraph(); });
+                        })(document.getElementById("online_user"));
+                    }
+                });
+            }
+            $(document).ajaxStop(function(){
+                $('.box:not(#info_container)').hide();
+            });
+            $('[data-action=info]').on('click',function(){
+                $('.active').removeClass('active');
+                $(this).parent().addClass('active');
+                $('.box').hide();
+                $('#info_container').show();
+            });
+            $('[data-action=message]').on('click',function(){
+                $('.active').removeClass('active');
+                $(this).parent().addClass('active');
+                $('.box').hide();
+                $('#message_container').show();
+            });
+            $('[data-action=action]').on('click',function(){
+                $('.active').removeClass('active');
+                $(this).parent().addClass('active');
+                $('.box').hide();
+                $('#action_container').show();
+            });
+            $('[data-action=onlineusers]').on('click',function(){
+                $('.active').removeClass('active');
+                $(this).parent().addClass('active');
+                $('.box').hide();
+                $('#onlineusers_container').show();
+            });
+            $('[data-action=onlineusers]').on('click',function(){
+                $('.active').removeClass('active');
+                $(this).parent().addClass('active');
+                $('.box').hide();
+                $('#onlineusers_container').show();
+            });
+            $('#datepickerinput').val(moment().format('YYYY/MM/DD'));
+            $('#datepicker').datetimepicker({
+                format: 'YYYY/MM/DD'
+            });
+            $('#datepicker').on('dp.change', function(){
+                fetchdata($('#datepickerinput').val());
+            });
+            fetchdata();
+        });
+        </script>
+  	</head>
+  	<body>
+    	<div class="container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><%= channel %></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbar">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#" data-action="info">Info</a></li>
+                            <li><a href="#" data-action="message">Message</a></li>
+                            <li><a href="#" data-action="action">Action</a></li>
+                            <li><a href="#" data-action="onlineusers">Online Users</a></li>
+                        </ul>
+                        <form class="navbar-form navbar-right" role="date">
+                            <div class="form-group">
+                                <div class='input-group date' id='datepicker'>
+                                    <input type="text" class="form-control" placeholder="YYYY/MM/DD" id="datepickerinput">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+            <div class="col-md-12 box" id="info_container">
+                <h3>Info</h3>
+                <div class="row">
+                    <div class="col-md-6" id="current_onlineuser_container">
+                        <h4>Online Users</h4>
+                        <div class='col-md-12' id='chart_container'>
+                        </div>
+                        <ul id="online_list" class="list-inline"></ul>
+                    </div>
+                </div>
+            </div>
+    		<div class="col-md-12 box" id="message_container">
+                <h3>Message</h3>
+                <table class="table table-bordered" >
+                    <tbody id='message'>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12 box" id="action_container">
+                <h3>Action</h3>
+                <table class="table table-bordered" >
+                    <thead>
+                        <tr><td style="width: 250px">Time</td><td style="width: 250px">Username</td><td>Host</td><td>Action</td><td>Reason</td></tr>
+                    </thead>
+                    <tbody id='action'>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12 box" id="onlineusers_container">
+                <h3>Online User</h3>
+                <div id="online_user" style="width: 800px; height: 400px;"></div>
+            </div>
+    	</div>
+  	</body>
+</html>
