@@ -20,8 +20,10 @@ function debugging(data, mode){
 		switch(mode){
 			case 'info':
 				console.log(info(string));
+				break;
 			case 'error':
 				console.log(error(string));
+				break;
 		}
 	}
 }

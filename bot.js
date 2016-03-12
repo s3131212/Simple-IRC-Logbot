@@ -133,8 +133,11 @@ function irc_connect(){
             }
         });
     });
+    bot.addListener('raw', function(message) {
+        debug.debugging(JSON.stringify(message), 'info');
+    });
     bot.addListener('error', function(message) {
-        debug.debugging(message, 'error');
+        debug.debugging(JSON.stringify(message), 'error');
     });
 
     return bot;
