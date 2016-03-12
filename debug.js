@@ -8,6 +8,8 @@ function debugging(data, mode){
 	var error = clc.red.bold;
 	var info = clc.green;
 
+	if(Array.isArray(data) || typeof data === 'object') data = JSON.stringify(data);
+
 	string += '[' + String(mode) + ']';
 	string += '[' + date.toISOString().slice(0, 19).replace('T', ' ') + ']';
 	string += ': ' + String(data);

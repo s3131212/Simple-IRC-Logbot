@@ -134,10 +134,10 @@ function irc_connect(){
         });
     });
     irc.addListener('raw', function(message) {
-        debug.debugging(JSON.stringify(message), 'info');
+        debug.debugging(message, 'info');
     });
     irc.addListener('error', function(message) {
-        debug.debugging(JSON.stringify(message), 'error');
+        debug.debugging(message, 'error');
     });
 
     return irc;
