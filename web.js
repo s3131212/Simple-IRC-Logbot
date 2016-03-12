@@ -7,7 +7,7 @@ function web_connect(){
     var config = global.config;
     var debug = global.debug;
     var mysqlcon = global.mysqlcon;
-    var bot = global.irc;
+    var irc = global.irc;
 
     var time = process.hrtime()[0];
     var web = express();
@@ -57,7 +57,7 @@ function web_connect(){
     });
     web.post('/admin/api/say', function (req, res) {
         if(req.session.login == true){
-            bot.say(req.body.to, req.body.context);
+            irc.say(req.body.to, req.body.context);
             res.send(JSON.stringify({status: 'true'}));
         }else{
             res.send(JSON.stringify({status: 'false'}));
@@ -65,7 +65,7 @@ function web_connect(){
     });
     web.post('/admin/api/join', function (req, res) {
         if(req.session.login == true){
-            bot.join(req.body.channel);
+            irc.join(req.body.channel);
             config.irc.channels.push(req.body.channel);
             console.log(JSON.stringify(config, null, 4));
             fs.writeFile(__dirname + '/config/config.json', JSON.stringify(config, null, 4), function(err) {
@@ -84,7 +84,7 @@ function web_connect(){
             var index = config.irc.channels.indexOf(req.body.channel);
             if (index > -1) {
                 config.irc.channels.splice(index, 1);
-                bot.part(req.body.channel);
+                irc.part(req.body.channel);
             }
             fs.writeFile(__dirname + '/config/config.json', JSON.stringify(config, null, 4), function(err) {
                 if(err) {
@@ -121,7 +121,7 @@ function web_connect(){
         if(req.session.login == true){
             console.log(req.body.command);
             console.log(req.body.command.split(' '));
-            bot.send.apply(bot, String(req.body.command).split(' '));
+            irc.send.apply(bot, String(req.body.command).split(' '));
             res.send(JSON.stringify({status: 'true'}));
         }else{
             res.send(JSON.stringify({status: 'false'}));
@@ -133,7 +133,7 @@ function web_connect(){
             mysqlcon.end(function(err) {
                 debug.debugging(err, 'error');
             });
-            bot.disconnect('Quit.');
+            irc.disconnect('Quit.');
             debug.debugging('The server is shutting down.' ,'info');
             process.exit();
         }else{

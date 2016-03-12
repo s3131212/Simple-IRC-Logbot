@@ -1,10 +1,10 @@
-var irc = require("irc");
+var nodeirc = require("irc");
 
 function irc_connect(){ 
     var config = global.config;
     var debug = global.debug;
     var mysqlcon = global.mysqlcon;
-    var bot = new irc.Client(config.irc.server, config.botname, {
+    var irc = new nodeirc.Client(config.irc.server, config.botname, {
         channels: config.irc.channels,
         userName: config.irc.username,
         realName: config.irc.realname,
@@ -13,11 +13,11 @@ function irc_connect(){
         autoConnect: false
     });
 
-    bot.connect(function(){
+    irc.connect(function(){
         debug.debugging('The bot is now up and running.' ,'info');
     });
 
-    bot.addListener('message', function(nick, to, text, message) {
+    irc.addListener('message', function(nick, to, text, message) {
         var data = {
             receiver: to,
             sender: nick,
@@ -31,10 +31,10 @@ function irc_connect(){
             }
         });
         if(text == 'ping'){
-            bot.say(to, 'pong');
+            irc.say(to, 'pong');
         }
     });
-    bot.addListener('join', function(channel, nick, message) {
+    irc.addListener('join', function(channel, nick, message) {
         var data = {
             username: nick,
             action: 'join',
@@ -47,9 +47,9 @@ function irc_connect(){
                 debug.debugging('SQL Write Fail', 'error');
             }
         });
-        bot.send("names",channel);
+        irc.send("names",channel);
     });
-    bot.addListener('part', function(channel, nick, reason, message) {
+    irc.addListener('part', function(channel, nick, reason, message) {
         var data = {
             username: nick,
             action: 'part',
@@ -63,9 +63,9 @@ function irc_connect(){
                 debug.debugging('SQL Write Fail', 'error');
             }
         });
-        bot.send("names",channel);
+        irc.send("names",channel);
     });
-    bot.addListener('quit', function(nick, reason, channels, message) {
+    irc.addListener('quit', function(nick, reason, channels, message) {
         var data = {
             username: nick,
             action: 'quit',
@@ -80,10 +80,10 @@ function irc_connect(){
             }
         });
         for(d in config.irc.channels){
-            bot.send("names",config.irc.channels[d]);
+            irc.send("names",config.irc.channels[d]);
         }
     });
-    bot.addListener('kick', function(channel, nick, by, reason, message) {
+    irc.addListener('kick', function(channel, nick, by, reason, message) {
         var data = {
             username: nick,
             action: 'kick',
@@ -99,11 +99,11 @@ function irc_connect(){
             }
         });
         if(nick == config.irc.username || nick == config.botname){
-            bot.join('channel'); 
+            irc.join('channel'); 
         }
-        bot.send("names",channel);
+        irc.send("names",channel);
     });
-    bot.addListener('kill', function(nick, reason, channels, message) {
+    irc.addListener('kill', function(nick, reason, channels, message) {
         var data = {
             username: nick,
             action: 'kill',
@@ -118,10 +118,10 @@ function irc_connect(){
             }
         });
         for(d in config.irc.channels){
-            bot.send("names",config.irc.channels[d]);
+            irc.send("names",config.irc.channels[d]);
         }
     });
-    bot.addListener('names', function(channel, nicks) {
+    irc.addListener('names', function(channel, nicks) {
         var data = {
             data: JSON.stringify(nicks),
             channel: channel,
@@ -133,14 +133,14 @@ function irc_connect(){
             }
         });
     });
-    bot.addListener('raw', function(message) {
+    irc.addListener('raw', function(message) {
         debug.debugging(JSON.stringify(message), 'info');
     });
-    bot.addListener('error', function(message) {
+    irc.addListener('error', function(message) {
         debug.debugging(JSON.stringify(message), 'error');
     });
 
-    return bot;
+    return irc;
 }
 
 module.exports = {
