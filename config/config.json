@@ -1,0 +1,31 @@
+{
+    "botname": "botname",
+    "irc": {
+        "channels": [
+            "#channel"
+        ],
+        "server": "irc.freenode.net",
+        "port": "6697",
+        "secure": true,
+        "username": "botname",
+        "realname": "botname"
+    },
+    "sql": {
+        "host": "mysql-host",
+        "user": "mysql-username",
+        "password": "mysql-password",
+        "database": "mysql-database"
+    },
+    "web": {
+        "enable": true,
+        "port": "3000",
+        "admin": {
+            "username": "root",
+            "password": "1234"
+        }
+    },
+    "debug": {
+        "enable": true,
+        "writelog": true
+    }
+}
