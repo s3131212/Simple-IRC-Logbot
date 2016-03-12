@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.13.3",
+    "cli-color": "^1.1.0",
     "ejs": "^2.3.3",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
@@ -20,5 +21,6 @@
     "Bot"
   ],
   "author": "Allen Chou",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/s3131212/Simple-IRC-Logbot"
 }

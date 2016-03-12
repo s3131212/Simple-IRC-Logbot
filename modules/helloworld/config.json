@@ -1,0 +1,10 @@
+{
+    "name": "Hello World!",
+    "mainfile": "helloworld",
+    "mainfunc": "helloworld",
+    "author": {
+        "name": "Allen Chou",
+        "email": "s3131212@gmail.com"
+    },
+    "repo": null
+}
