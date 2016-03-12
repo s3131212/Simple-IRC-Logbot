@@ -1,6 +1,6 @@
 # Simple IRC Logbot
 
-[English](README_zh.md)
+[English](README.md)
 
 ## 簡介
 這是一個超級簡單的 IRC bot ，有著好棒棒的網頁介面。網頁介面也可以用來檢視統計資料、以 Bot 的身份發話、加入 / 退出頻道、執行指令、修改設置，當然也可以關閉 Bot 程序。
