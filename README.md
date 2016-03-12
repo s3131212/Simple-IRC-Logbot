@@ -52,18 +52,18 @@ GET /api/message/
 The above request may return the full chat data in JSON.
 
 Additional parameters:
-*   channel  
+*   `channel`  
 	String  
 	To specify a channel. Make sure that the `#` sign is converted into `%23`.  
-*   username  
+*   `username`  
 	String  
 	To specify an user.  
-*   start  
+*   `start`  
 	UNIX Timestamp  
-	To specify the earliest time, will drop all message before this time. You must also specify the 'end' parameter.  
-*   end  
+	To specify the earliest time, will drop all message before this time. You must also specify the `end` parameter.  
+*   `end`  
 	Unix Timestamp  
-	To specify the latest time, will drop all message after this time. You must also specify the 'start' parameter.  
+	To specify the latest time, will drop all message after this time. You must also specify the `start` parameter.  
 
 Note that you must specify channel or username or both.
 
@@ -75,21 +75,21 @@ GET /api/action/
 The above request may return the full user action data in JSON.
 
 Additional parameters:
-*   channel  
+*   `channel`  
 	String  
 	To specify a channel. Make sure that the `#` sign is converted into `%23`.  
-*   username  
+*   `username`  
 	String  
 	To specify an user.  
-*   action  
+*   `action`  
 	String  
 	To specify an action, which is join, quit, part, kill, or kick.  
-*   start  
+*   `start`  
 	UNIX Timestamp  
-	To specify the earliest time, will drop all message before this time. You must also specify the 'end' parameter.  
-*   end  
+	To specify the earliest time, will drop all message before this time. You must also specify the `end` parameter.  
+*   `end`  
 	Unix Timestamp  
-	To specify the latest time, will drop all message after this time. You must also specify the 'start' parameter.  
+	To specify the latest time, will drop all message after this time. You must also specify the `start` parameter.  
 
 ### Names
 
@@ -99,15 +99,15 @@ GET /api/names/
 The above request may return the full online users data in specified channel in JSON.
 
 Additional parameters:  
-*   channel  
+*   `channel`  
 	String  
 	To specify a channel. Make sure that the `#` sign is converted into `%23`.  
-*   start  
+*   `start`  
 	UNIX Timestamp  
-	To specify the earliest time, will drop all message before this time. You must also specify the 'end' parameter.  
-*   end  
+	To specify the earliest time, will drop all message before this time. You must also specify the `end` parameter.  
+*   `end`  
 	Unix Timestamp  
-	To specify the latest time, will drop all message after this time. You must also specify the 'start' parameter.  
+	To specify the latest time, will drop all message after this time. You must also specify the `start` parameter.  
 
 ##License
 This project is released under MIT License, please read "[LICENSE](LICENSE)" for more information.

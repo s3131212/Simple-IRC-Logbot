@@ -50,18 +50,18 @@ GET /api/message/
 以上請求會以 JSON 格式回傳完整對話。
 
 附加參數
-*   channel  
+*   `channel`  
 	String  
 	指定頻道，記得在 URL 列中 `#` 必須以 `%23` 表示。  
-*   username  
+*   `username`  
 	String  
 	指令用戶的對話內容。  
-*   start  
+*   `start`  
 	UNIX Timestamp  
-	指定要抓取的資料中最早的時間點，以 UNIX Timestamp 表示。必須同時指定 'end' 參數。  
-*   end  
+	指定要抓取的資料中最早的時間點，以 UNIX Timestamp 表示。必須同時指定 `end` 參數。  
+*   `end`  
 	Unix Timestamp  
-	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 'start' 參數。  
+	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 `start` 參數。  
 
 注意：請至少指定 channel 或是 username ，當然也可以兩個都指定。
 
@@ -73,21 +73,21 @@ GET /api/action/
 以上請求會以 JSON 格式回傳完整用戶動作。
 
 附加參數
-*   channel  
+*   `channel`  
 	String  
 	指定頻道，記得在 URL 列中 `#` 必須以 `%23` 表示。  
-*   username  
+*   `username`  
 	String  
 	指令用戶的對話內容。  
-*   action  
+*   `action`  
 	String  
 	指定一個動作，包含 join / quit / part / kill / kick.  
-*   start  
+*   `start`  
 	UNIX Timestamp  
-	指定要抓取的資料中最早的時間點，以 UNIX Timestamp 表示。必須同時指定 'end' 參數。  
-*   end  
+	指定要抓取的資料中最早的時間點，以 UNIX Timestamp 表示。必須同時指定 `end` 參數。  
+*   `end`  
 	Unix Timestamp  
-	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 'start' 參數。  
+	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 `start` 參數。  
 
 ### 線上用戶名單
 
@@ -97,18 +97,18 @@ GET /api/names/
 以上請求會以 JSON 格式回傳完整用戶在線人數。
 
 附加參數
-*   channel  
+*   `channel`  
 	String  
 	指定頻道，記得在 URL 列中 `#` 必須以 `%23` 表示。  
-*   username  
+*   `username`  
 	String  
 	指令用戶的對話內容。  
-*   start  
+*   `start`  
 	UNIX Timestamp  
-	指定要抓取的資料中最早的時間點，以 UNIX Timestamp 表示。必須同時指定 'end' 參數。  
-*   end  
+	指定要抓取的資料中最早的時間點，以 UNIX Timestamp 表示。必須同時指定 `end` 參數。  
+*   `end`  
 	Unix Timestamp  
-	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 'start' 參數。 
+	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 `start` 參數。 
 
 ##License
 這個專案是用 MIT License 釋出的，請詳閱 "[LICENSE](LICENSE)" 。
