@@ -1,5 +1,7 @@
 # Simple IRC Logbot
 
+[繁體中文](README_zh.md)
+
 ## Introdution
 This is a very simple IRC Logbot with web interface that can be used to record chats, analyze user behavior, and analyze channel.
 
@@ -20,9 +22,9 @@ cd simple-irc-bot
 npm install
 ```
 
-Before starting the bot, please make sure you have filled in the correct configuration in /config/config.js and import irc.sql into the MySQL Database.
+Before you start the bot, please make sure you have filled in the correct configuration in `/config/config.json` and import `irc.sql` into the MySQL Database.
 
-After getting ready, execute following command to start the bot:
+After you get ready, execute following command to start the bot:
 
 ```
 node app.js
@@ -30,10 +32,17 @@ node app.js
 
 And then go to http://localhost:port to access the web interface.
 
-To shut down the bot, DO NOT USE Ctrl+C IN CONSOLE because the bot would be forced to disconnect, visit the web interface and log in to the admin page, and then you will find the "Shutdown" button in "Action".
+If you want to make sure the bot will keep running without any interruption, use _forever_ instead.
+
+```
+npm install -g forever
+forever start app.js
+```
+
+To shut down the bot, _DO NOT USE Ctrl+C IN CONSOLE_ because the bot would be forced to disconnect, visit the web interface and log in to the admin page, and then you will find the "Shutdown" button in "Action".
 
 ##API
-Send HTTP Get request to API URL to fetch data.
+Send `HTTP GET` request to API URL to fetch data.
 
 ### Message
 
@@ -45,7 +54,7 @@ The above request may return the full chat data in JSON.
 Additional parameters:
 *   channel  
 	String  
-	To specify a channel. Make sure that the '#' sign is converted into '%23'.  
+	To specify a channel. Make sure that the `#` sign is converted into `%23`.  
 *   username  
 	String  
 	To specify an user.  
@@ -68,7 +77,7 @@ The above request may return the full user action data in JSON.
 Additional parameters:
 *   channel  
 	String  
-	To specify a channel. Make sure that the '#' sign is converted into '%23'.  
+	To specify a channel. Make sure that the `#` sign is converted into `%23`.  
 *   username  
 	String  
 	To specify an user.  
@@ -92,7 +101,7 @@ The above request may return the full online users data in specified channel in 
 Additional parameters:  
 *   channel  
 	String  
-	To specify a channel. Make sure that the '#' sign is converted into '%23'.  
+	To specify a channel. Make sure that the `#` sign is converted into `%23`.  
 *   start  
 	UNIX Timestamp  
 	To specify the earliest time, will drop all message before this time. You must also specify the 'end' parameter.  
