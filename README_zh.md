@@ -3,7 +3,7 @@
 [English](README.md)
 
 ## 簡介
-這是一個超級簡單的 IRC bot ，有著好棒棒的網頁介面。網頁介面也可以用來檢視統計資料、以 Bot 的身份發話、加入 / 退出頻道、執行指令、修改設置，當然也可以關閉 Bot 程序。
+這是一個超級簡單的 IRC bot ，有著好棒棒的網頁介面以及外掛系統。網頁介面也可以用來檢視統計資料、以 Bot 的身份發話、加入 / 退出頻道、執行指令、修改設置，當然也可以關閉 Bot 程序。
 
 ##環境
 
@@ -110,6 +110,73 @@ GET /api/names/
 	Unix Timestamp  
 	指定要抓取的資料中最晚的時間點，以 UNIX Timestamp 表示。必須同時指定 `start` 參數。 
 
+##外掛
+把所有外掛放在 `/plugins` 目錄中。外掛集合放在 [plugins](https://github.com/s3131212/Simple-IRC-Logbot/tree/plugins) branch，可以去看看。
+
+###開發者專區
+我們來一步一步寫出一個外掛吧
+
+####目錄結構
+```
+plugins/your-plugin-name —— main.js (或任何你喜歡的名稱)
+                         |
+                         —— config.json (這是必要的)
+                         |
+                         —— any other file
+```
+
+####config.json
+```
+{
+    "name": "外掛名稱",
+    "mainfile": "外掛主程式檔案名稱",
+    "mainfunc": "外掛主程式函數名稱",
+    "author": {
+        "name": "你的名稱",
+        "email": "Email"
+    },
+    "repo": "Repo 的網址，如果沒有就寫 null"
+}
+```
+####外掛內容
+只需要寫點程式，把 'mainfunc' 指定的函數以及其他任何會用到的函數 export 出來就可以囉。
+
+這些是一些需要用到的變數
+*   `global.irc`  
+	IRC Bot  
+	node-irc 資源，詳細請見[此 API 文件](http://node-irc.readthedocs.org/en/latest/API.html)。  
+*   `global.web`  
+	Web Framework  
+	ExpressJS 資源，詳細請見[此 API 文件](http://expressjs.com/en/4x/api.html)。  
+*   `global.mysqlcon`  
+	MySQL Connection  
+	node-mysql 資源，詳細請見[此 API 文件](https://github.com/felixge/node-mysql/blob/master/Readme.md)。  
+
+來試試看一個 'Hello World' 吧！
+```javascript
+// 首先當然要開一個函數
+function helloworld(){
+	//從 IRC 開始練習
+    var bot = global.irc; // global.irc 是 IRC Bot 的變數名稱
+    bot.addListener('message', function(nick, to, text, message) { //增加一個 Listener
+        if(text == 'helloworld'){
+            bot.say(to, 'helloworld'); // 當我們收到 'helloworld' 就回應 'helloworld'
+        }
+    });
+    //再來試試看 Web 
+    var web = global.web; // global.web 是 Expressjs 的變數名稱
+    web.get('/helloworld', function (req, res) {
+        res.send("helloworld"); // 當我們收到 GET 請求 'helloworld' 就回應 'helloworld'
+    });
+}
+
+//Export 出來！
+module.exports = {
+   helloworld :  helloworld
+}
+
+//然後就大功告成囉
+```
 ##License
 這個專案是用 MIT License 釋出的，請詳閱 "[LICENSE](LICENSE)" 。
 

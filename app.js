@@ -10,4 +10,4 @@ global.irc = require('./irc.js').irc_connect();
 global.web = require('./web.js').web_connect();
 
 //Load Customize Modules
-global.modules = require('./modules.js').scan_modules();
+global.plugins = require('./plugins.js').scan_plugins();
