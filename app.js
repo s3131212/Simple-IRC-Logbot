@@ -5,7 +5,7 @@ global.config = JSON.parse(fs.readFileSync(__dirname + '/config/config.json', 'u
 
 //Get module
 global.debug = require('./debug.js');
-global.mysqlcon = require('./mysql.js').mysql_connect();
+global.mysqlcon = require('./mysql.js').handleConnection();
 global.irc = require('./irc.js').irc_connect();
 global.web = require('./web.js').web_connect();
 

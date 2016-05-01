@@ -1,43 +1,34 @@
 var mysql = require("mysql");
 
-function mysql_connect(){
+function handleConnection() {
     var config = global.config;
     var debug = global.debug;
-
-    var mysqlcon = mysql.createConnection({
+    var connection;
+    connection = mysql.createConnection({
         host     : config.sql.host,
         user     : config.sql.user,
         password : config.sql.password,
         database : config.sql.database
     });
-    mysqlcon.connect(function(err) {
-        if (err) {
-            debug.debugging('MySQL Error: ' + err.stack , 'error');
+    connection.connect(function(err) {
+        if(err) {
+            debug.debugging('MySQL Error: ' + err , 'error');
+            setTimeout(handleConnection, 2000);
         }
-        debug.debugging('MySQL Connected as ID ' + mysqlcon.threadId , 'info');
     });
-    handleDisconnect(mysqlcon);
-    return mysqlcon;
-};
+    connection.on('error', function(err) {
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+            debug.debugging('Re-connecting lost connection: ' + err.stack , 'error');
+            handleConnection();
+        } else {
+            debug.debugging('MySQL Error: ' + err , 'error');
+        }
+    });
+    return connection;
+}
 
-function handleDisconnect(conn) {
-    conn.on('error', function(err) {
-        if (!err.fatal) {
-            return;
-        }
-        
-        if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
-            console.log(err);
-        }
-        
-        console.log('Re-connecting lost connection: ' + err.stack);
-        
-        conn = mysql_connect(conn);
-        handleDisconnect(conn);
-    });
-};
+
 
 module.exports = {
-   handleDisconnect :  handleDisconnect,
-   mysql_connect : mysql_connect
+   handleConnection : handleConnection
 }
